@@ -1,0 +1,30 @@
+version: "2.1"
+services:
+  swag:
+    image: lscr.io/linuxserver/swag:latest
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - URL=${BASE_URL}
+      - VALIDATION=http
+      - ONLY_SUBDOMAINS=plex,radarr,overseerr,sonarr,bazarr,prowlarr
+    volumes:
+      - ./config/:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+
+      
+  authelia:
+    image: authelia/authelia
+    environment:
+      - TZ=${TZ}
+    expose:
+      - 9091
+    volumes:
+      - ./data/authelia/config:/config
+    restart: unless-stopped
+
+

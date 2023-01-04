@@ -1,0 +1,37 @@
+version: "2.1"
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+    volumes:
+      - ./config/plex:/config
+      - ./tv:/tv
+      - ./movies:/movies
+    ports:
+      - 32400:32400
+    restart: unless-stopped
+    networks:
+      - backend_backend-net
+
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: overseerr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./config/overseerr:/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+    networks:
+      - backend_backend-net
+
+networks:
+  backend_backend-net:
+    external: true
